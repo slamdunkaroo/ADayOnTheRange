@@ -43,8 +43,10 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
     {
         UE_LOG(LogTemp, Warning, TEXT("Projectile hit: %s"), *OtherActor->GetName());
 
-        if (OtherActor->ActorHasTag("Bullseye"))
+        if (OtherComp && OtherComp->ComponentHasTag("Bullseye"))
         {
+            UE_LOG(LogTemp, Warning, TEXT("Bullseye hit!"));
+
             AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
             AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
 
@@ -57,4 +59,5 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
         Destroy();
     }
 }
+
 
