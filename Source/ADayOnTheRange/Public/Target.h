@@ -51,4 +51,8 @@ protected:
 
     UPROPERTY(EditAnywhere, Category = "Effects")
     UParticleSystem* HitEffect;
+
+    UPROPERTY(VisibleAnywhere)
+    UStaticMeshComponent* BullseyeMesh;
+
 };
