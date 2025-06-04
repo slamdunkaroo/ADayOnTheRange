@@ -10,6 +10,7 @@ ATarget::ATarget(const FObjectInitializer& ObjectInitializer)
 
     PrimaryActorTick.bCanEverTick = false;
 
+    // Main target mesh setup
     TargetMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TargetMesh"));
     RootComponent = TargetMesh;
 
@@ -19,9 +20,17 @@ ATarget::ATarget(const FObjectInitializer& ObjectInitializer)
     TargetMesh->SetSimulatePhysics(true);
 
     TargetMesh->OnComponentHit.AddDynamic(this, &ATarget::OnHit);
+
+    // Bullseye mesh setup
+    BullseyeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BullseyeMesh"));
+    BullseyeMesh->SetupAttachment(TargetMesh);
+
+    BullseyeMesh->SetNotifyRigidBodyCollision(true);
+    BullseyeMesh->SetGenerateOverlapEvents(true);
+    BullseyeMesh->SetCollisionProfileName("BlockAllDynamic");
+
+    BullseyeMesh->ComponentTags.Add(FName("Bullseye"));
 }
-
-
 
 void ATarget::BeginPlay()
 {
@@ -44,7 +53,6 @@ void ATarget::NotifyHit(
 {
     Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 }
-
 
 void ATarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -74,7 +82,6 @@ void ATarget::FallOver()
 
     UE_LOG(LogTemp, Warning, TEXT("Target is falling with torque!"));
 }
-
 
 void ATarget::ResetTarget()
 {
