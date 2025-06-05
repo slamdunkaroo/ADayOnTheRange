@@ -2,6 +2,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "ShootingRangeGameMode.h"
+
 
 ATarget::ATarget(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
@@ -59,10 +61,20 @@ void ATarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 {
     if (!bIsFallen)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Hit registered, falling target."));
+        UE_LOG(LogTemp, Warning, TEXT("Hit registered on target."));
+
+        // Add score directly
+        AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
+        AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
+        if (SRGM)
+        {
+            SRGM->AddScore(10); // Or whatever value you want
+        }
+
         FallOver();
     }
 }
+
 
 void ATarget::FallOver()
 {
