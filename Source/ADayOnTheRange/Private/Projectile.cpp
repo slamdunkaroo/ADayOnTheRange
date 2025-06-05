@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "ShootingRangeGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Target.h"
 
 AProjectile::AProjectile()
 {
@@ -43,9 +44,9 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
     {
         UE_LOG(LogTemp, Warning, TEXT("Projectile hit: %s"), *OtherActor->GetName());
 
-        if (OtherComp && OtherComp->ComponentHasTag("Bullseye"))
+        if (OtherActor->IsA(ATarget::StaticClass()))
         {
-            UE_LOG(LogTemp, Warning, TEXT("Bullseye hit!"));
+            UE_LOG(LogTemp, Warning, TEXT("Target hit!"));
 
             AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
             AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
@@ -59,5 +60,3 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
         Destroy();
     }
 }
-
-
