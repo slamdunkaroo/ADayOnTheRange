@@ -44,19 +44,25 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
     {
         UE_LOG(LogTemp, Warning, TEXT("Projectile hit: %s"), *OtherActor->GetName());
 
-        if (OtherActor->IsA(ATarget::StaticClass()))
+        AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
+
+        if (GM)
         {
-            UE_LOG(LogTemp, Warning, TEXT("Target hit!"));
+            UE_LOG(LogTemp, Warning, TEXT("GameMode class is: %s"), *GM->GetClass()->GetName());
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("GameMode is NULL!"));
+        }
 
-            AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
-            AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
-
-            if (SRGM)
-            {
-                SRGM->AddScore(10);
-            }
+        AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
+        if (SRGM)
+        {
+            SRGM->AddScore(10);
         }
 
         Destroy();
     }
 }
+
+

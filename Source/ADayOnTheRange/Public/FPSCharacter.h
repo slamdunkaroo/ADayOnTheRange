@@ -14,7 +14,7 @@ class ADAYONTHERANGE_API AFPSCharacter : public ACharacter
     GENERATED_BODY()
 
 public:
-    float GetTimeRemaining() const;
+    //float GetTimeRemaining() const;
     AFPSCharacter();
 
 protected:
@@ -28,7 +28,7 @@ private:
     void LookUp(float Value);
     void FireWeapon();
     void TogglePauseMenu();
-    void UpdateGameTimer();
+    //void UpdateGameTimer();
     void TriggerGameOver();
     FTimerHandle GameTimerHandle;
     float TimeRemaining;
