@@ -36,4 +36,10 @@ private:
     USRSaveGame* SaveGameInstance;
     int32 CurrentScore;
     int32 HighScore;
+    FTimerHandle GameTimerHandle;
+    int32 TimeRemaining = 30;
+
+    void UpdateTimer();
+    void EndGame();
+
 };
