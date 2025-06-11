@@ -21,6 +21,7 @@ protected:
     virtual void BeginPlay() override;
     void FallOver();
     void ResetTarget();
+    void Tick(float DeltaTime);
     FTimerHandle ResetTargetHandle;
     FRotator OriginalRotation;
     bool bIsFallen = false;
@@ -54,5 +55,16 @@ protected:
 
     UPROPERTY(VisibleAnywhere)
     UStaticMeshComponent* BullseyeMesh;
+
+    // Movement parameters
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float MovementAmplitude = 100.f;
+
+    UPROPERTY(EditAnywhere, Category = "Movement")
+    float MovementSpeed = 2.f;
+
+    FVector StartLocation;
+    float RunningTime = 0.f;
+
 
 };

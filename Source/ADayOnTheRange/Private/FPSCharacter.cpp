@@ -28,8 +28,8 @@ void AFPSCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    //TimeRemaining = 60.0f;
-    //GetWorldTimerManager().SetTimer(GameTimerHandle, this, &AFPSCharacter::UpdateGameTimer, 1.0f, true);
+    TimeRemaining = 60.0f;
+    GetWorldTimerManager().SetTimer(GameTimerHandle, this, &AFPSCharacter::UpdateGameTimer, 1.0f, true);
 
     if (ReticleClass)
     {
@@ -99,16 +99,16 @@ void AFPSCharacter::FireWeapon()
     }
 }
 
-//void AFPSCharacter::UpdateGameTimer()
-//{
-    //TimeRemaining -= 1.0f;
+void AFPSCharacter::UpdateGameTimer()
+{
+    TimeRemaining -= 1.0f;
 
-    //if (TimeRemaining <= 0.0f)
-    //{
-        //GetWorldTimerManager().ClearTimer(GameTimerHandle);
-        //TriggerGameOver();
-   // }
-//}
+    if (TimeRemaining <= 0.0f)
+    {
+        GetWorldTimerManager().ClearTimer(GameTimerHandle);
+        TriggerGameOver();
+    }
+}
 
 
 void AFPSCharacter::TogglePauseMenu()
@@ -171,10 +171,10 @@ void AFPSCharacter::TriggerGameOver()
     UGameplayStatics::SetGamePaused(GetWorld(), true);
 }
 
-//float AFPSCharacter::GetTimeRemaining() const
-//{
-    //return TimeRemaining;
-//}
+float AFPSCharacter::GetTimeRemaining() const
+{
+    return TimeRemaining;
+}
 
 
 

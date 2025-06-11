@@ -42,7 +42,6 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 {
     if (OtherActor && OtherActor != this)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Projectile hit: %s"), *OtherActor->GetName());
 
         AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
 

@@ -51,7 +51,6 @@ void AShootingRangeGameMode::BeginPlay()
 
 void AShootingRangeGameMode::AddScore(int32 Points)
 {
-    UE_LOG(LogTemp, Warning, TEXT("[GameMode] AddScore called: +%d"), Points);
     CurrentScore += Points;
 
     if (CurrentScore > HighScore)

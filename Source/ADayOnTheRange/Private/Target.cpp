@@ -8,9 +8,8 @@
 ATarget::ATarget(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
-    UE_LOG(LogTemp, Warning, TEXT("ATarget Constructor called"));
 
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
 
     // Main target mesh setup
     TargetMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TargetMesh"));
@@ -37,7 +36,6 @@ ATarget::ATarget(const FObjectInitializer& ObjectInitializer)
 void ATarget::BeginPlay()
 {
     Super::BeginPlay();
-    UE_LOG(LogTemp, Warning, TEXT("BeginPlay: physics sim is %s"), TargetMesh->IsSimulatingPhysics() ? TEXT("ON") : TEXT("OFF"));
     OriginalRotation = GetActorRotation();
     OriginalLocation = GetActorLocation();
     bIsFallen = false;
@@ -61,14 +59,11 @@ void ATarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 {
     if (!bIsFallen)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Hit registered on target."));
-
-        // Add score directly
         AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
         AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
         if (SRGM)
         {
-            SRGM->AddScore(10); // Or whatever value you want
+            SRGM->AddScore(10);
         }
 
         FallOver();
@@ -84,15 +79,13 @@ void ATarget::FallOver()
     TargetMesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
     TargetMesh->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 
-    // Apply torque to rotate on X-axis (like a hinged fall forward)
-    FVector Torque = FVector(500000.f, 0.f, 0.f); // Tune this value as needed
+    FVector Torque = FVector(500000.f, 0.f, 0.f);
     TargetMesh->AddTorqueInDegrees(Torque, NAME_None, true);
 
     bIsFallen = true;
 
     GetWorldTimerManager().SetTimer(ResetTargetHandle, this, &ATarget::ResetTarget, 1.0f, false);
 
-    UE_LOG(LogTemp, Warning, TEXT("Target is falling with torque!"));
 }
 
 void ATarget::ResetTarget()
@@ -105,6 +98,19 @@ void ATarget::ResetTarget()
     SetActorRotation(OriginalRotation);
 
     bIsFallen = false;
-
-    UE_LOG(LogTemp, Warning, TEXT("Target reset."));
 }
+
+void ATarget::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+    // Only move if not fallen
+    if (!bIsFallen)
+    {
+        RunningTime += DeltaTime;
+        FVector NewLocation = StartLocation;
+        NewLocation.Y += FMath::Sin(RunningTime * MovementSpeed) * MovementAmplitude;
+        SetActorLocation(NewLocation);
+    }
+}
+
