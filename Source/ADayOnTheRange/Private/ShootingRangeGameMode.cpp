@@ -12,6 +12,10 @@ AShootingRangeGameMode::AShootingRangeGameMode()
     {
         ScoreWidgetClass = WidgetClassFinder.Class;
     }
+    if (ScoreText)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("[GameMode] Initial ScoreText = %s"), *ScoreText->GetText().ToString());
+    }
 
     CurrentScore = 0;
     HighScore = 0;
