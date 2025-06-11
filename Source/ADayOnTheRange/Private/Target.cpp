@@ -9,7 +9,7 @@ ATarget::ATarget(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)
 {
 
-    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
     // Main target mesh setup
     TargetMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TargetMesh"));
@@ -98,19 +98,5 @@ void ATarget::ResetTarget()
     SetActorRotation(OriginalRotation);
 
     bIsFallen = false;
-}
-
-void ATarget::Tick(float DeltaTime)
-{
-    Super::Tick(DeltaTime);
-
-    // Only move if not fallen
-    if (!bIsFallen)
-    {
-        RunningTime += DeltaTime;
-        FVector NewLocation = StartLocation;
-        NewLocation.Y += FMath::Sin(RunningTime * MovementSpeed) * MovementAmplitude;
-        SetActorLocation(NewLocation);
-    }
 }
 
