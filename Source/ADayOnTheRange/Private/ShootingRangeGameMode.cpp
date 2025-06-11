@@ -47,6 +47,8 @@ void AShootingRangeGameMode::BeginPlay()
             }
         }
     }
+    GetWorldTimerManager().SetTimer(GameTimerHandle, this, &AShootingRangeGameMode::UpdateTimer, 1.0f, true);
+
 }
 
 void AShootingRangeGameMode::AddScore(int32 Points)
@@ -68,4 +70,36 @@ void AShootingRangeGameMode::AddScore(int32 Points)
         HighScoreText->SetText(FText::AsNumber(HighScore));
     }
 }
+
+void AShootingRangeGameMode::UpdateTimer()
+{
+    TimeRemaining--;
+
+    UE_LOG(LogTemp, Warning, TEXT("Time Remaining: %d"), TimeRemaining);
+
+    if (ScoreWidget)
+    {
+        UTextBlock* TimerText = Cast<UTextBlock>(ScoreWidget->GetWidgetFromName(TEXT("TimerText")));
+        if (TimerText)
+        {
+            FString TimeString = FString::Printf(TEXT("Time: %d"), FMath::Max(0, TimeRemaining));
+            TimerText->SetText(FText::FromString(TimeString));
+        }
+    }
+
+    if (TimeRemaining <= 0)
+    {
+        EndGame();
+    }
+}
+
+
+void AShootingRangeGameMode::EndGame()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Game Over!"));
+
+    GetWorldTimerManager().ClearTimer(GameTimerHandle);
+}
+
+
 
