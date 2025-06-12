@@ -1,4 +1,4 @@
-#include "FPSCharacter.h"
+﻿#include "FPSCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Components/InputComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -23,14 +23,13 @@ AFPSCharacter::AFPSCharacter()
     FPStaticArms->SetRelativeLocation(FVector(0.0f, 0.0f, -20.0f));
     FPStaticArms->SetRelativeRotation(FRotator::ZeroRotator);
 
-    SaveSlotName = TEXT("PlayerSaveSlot"); // Set default save slot name
+    SaveSlotName = TEXT("PlayerSaveSlot");
 }
 
 void AFPSCharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    // Load or create save game
     if (UGameplayStatics::DoesSaveGameExist(SaveSlotName, 0))
     {
         SaveGameInstance = Cast<USRSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
@@ -44,20 +43,22 @@ void AFPSCharacter::BeginPlay()
     if (SaveGameInstance)
     {
         HighScore = SaveGameInstance->HighScore;
+        UE_LOG(LogTemp, Warning, TEXT("✔ Loaded high score: %d"), HighScore);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("✘ Failed to cast loaded SaveGame."));
     }
 
-    // Timer setup
     TimeRemaining = 30.0f;
     GetWorldTimerManager().SetTimer(GameTimerHandle, this, &AFPSCharacter::UpdateGameTimer, 1.0f, true);
 
-    // Reticle UI
     if (ReticleClass)
     {
         UUserWidget* Reticle = CreateWidget<UUserWidget>(GetWorld(), ReticleClass);
         if (Reticle) Reticle->AddToViewport();
     }
 
-    // Score UI
     if (ScoreHUDClass)
     {
         ScoreHUDWidget = CreateWidget<UUserWidget>(GetWorld(), ScoreHUDClass);
@@ -83,7 +84,6 @@ void AFPSCharacter::BeginPlay()
         }
     }
 
-    // Restore input mode
     if (APlayerController* PC = Cast<APlayerController>(GetController()))
     {
         PC->SetInputMode(FInputModeGameOnly());
@@ -173,7 +173,15 @@ void AFPSCharacter::TriggerGameOver()
     if (SaveGameInstance)
     {
         SaveGameInstance->HighScore = HighScore;
-        UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveSlotName, 0);
+        const bool bSaved = UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveSlotName, 0);
+        if (bSaved)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("✔ High score saved: %d"), HighScore);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("✘ Failed to save high score."));
+        }
     }
 
     if (GameOverScreenClass)

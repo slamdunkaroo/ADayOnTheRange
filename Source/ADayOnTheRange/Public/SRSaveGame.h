@@ -14,5 +14,5 @@ public:
     USRSaveGame();
 
     UPROPERTY(VisibleAnywhere, Category = "SaveGameData")
-    int32 HighScore;
+    int32 HighScore = 0;
 };

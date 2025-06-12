@@ -54,21 +54,21 @@ void ATarget::NotifyHit(
     Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 }
 
-void ATarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
-    UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-    if (!bIsFallen)
-    {
-        AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
-        AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
-        if (SRGM)
-        {
-            SRGM->AddScore(10);
-        }
+//void ATarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
+    //UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//{
+    //if (!bIsFallen)
+    //{
+        //GameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
+        //AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
+        //if (SRGM)
+        //{
+            //SRGM->AddScore(1);
+       // }
 
-        FallOver();
-    }
-}
+        //FallOver();
+   // }
+//}
 
 
 void ATarget::FallOver()
