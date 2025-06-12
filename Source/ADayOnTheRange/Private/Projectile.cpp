@@ -5,6 +5,7 @@
 #include "ShootingRangeGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Target.h"
+#include "FPSCharacter.h"
 
 AProjectile::AProjectile()
 {
@@ -42,9 +43,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
 {
     if (OtherActor && OtherActor != this)
     {
-
         AGameModeBase* GM = UGameplayStatics::GetGameMode(GetWorld());
-
         if (GM)
         {
             UE_LOG(LogTemp, Warning, TEXT("GameMode class is: %s"), *GM->GetClass()->GetName());
@@ -57,11 +56,19 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor,
         AShootingRangeGameMode* SRGM = Cast<AShootingRangeGameMode>(GM);
         if (SRGM)
         {
-            SRGM->AddScore(10);
+            SRGM->AddScore(1);
+        }
+
+        AFPSCharacter* PlayerChar = Cast<AFPSCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+        if (PlayerChar)
+        {
+            PlayerChar->RegisterHit();
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Failed to get FPSCharacter to register hit"));
         }
 
         Destroy();
     }
 }
-
-
